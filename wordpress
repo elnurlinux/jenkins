@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+        stages{
+            stage('First stage'){
+                steps{
+                    sh 'sudo yum install httpd php php-gd  mysql mysql-server php-mysql -y'
+                }
+
+            }
+            stage('Second stage'){
+                steps{
+                    sh 'sudo service httpd restart'
+                }
+            }
+            stage('Third stage'){
+                steps{
+                    sh 'sudo echo Hello  >>/tmp/index.html'
+                }
+            }
+            stage('Forth stage'){
+                steps{
+                    sh 'sudo cp /tmp/index.html /var/www/html/index.html'
+                }
+            }
+            
+            
+            
+            stage('Fifth stage'){
+                steps{
+                    sh 'sudo systemctl stop firewalld'
+                }
+            }
+            stage('Sixth stage'){
+                steps{
+                    sh 'sudo yum install wget  -y'
+                    sh 'wget https://wordpress.org/latest.tar.gz'
+                }
+            }
+            stage('Wordpress stage'){
+                steps{
+                    sh 'sudo rm -rf /var/www/html/*'
+                    sh 'sudo tar xzf  latest.tar.gz -C  /var/www/html'
+                    sh 'sudo  mv /var/www/html/wordpress/*  /var/www/html/'
+                    sh 'sudo chown apache.apache /var/www/html/*'
+                }
+            }
+        }
+
+}
